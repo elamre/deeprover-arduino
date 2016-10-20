@@ -98,9 +98,12 @@ void loop(){
   distance = (duration/2) / 29.1;
   
   //Wire.onRequest(distance); 
+  Serial.print("Distance: ");
   Serial.println(distance);
-  delay(1000);
-  testDrive();
+  
+  
+  delay(500);
+  //testDrive();
 }
 
 
@@ -124,15 +127,20 @@ int receivedLength = 0;
 
 
 void requestCallback() {
-  while(Wire.available()>1 && receivedLength != 0){
+  while(Wire.available()>1){ // && receivedLength != 0){ this is for later
     receiveBuffer[receiveBufferIndex] = Wire.read();
     if(receiveBufferIndex == PROTOCOL_BYTE_LEN){
       receivedLength = receiveBuffer[receiveBufferIndex];
     }
+    Serial.print(receiveBuffer[receiveBufferIndex]);
+    Serial.print(" ");
     receiveBufferIndex++;
   }
+  Serial.print("\n With size: ");
+  Serial.println(receiveBufferIndex);
   if(receiveBufferIndex < receivedLength){
     delay(10);
+    return;
     //TODO check again, throw a timeout
   }
   receiveBufferIndex = 0;
